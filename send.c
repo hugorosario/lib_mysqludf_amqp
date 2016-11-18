@@ -128,6 +128,8 @@ lib_mysqludf_amqp_send(UDF_INIT *initid, UDF_ARGS *args, char* result, unsigned 
     props.message_id = amqp_cstring_bytes(conn_info->message_id);
     props._flags |= AMQP_BASIC_MESSAGE_ID_FLAG;
 
+    amqp_queue_declare(conn_info->conn, 1, amqp_cstring_bytes(args->args[5]), 0, 1, 0, 0, amqp_empty_table);
+        
     rc = amqp_basic_publish(conn_info->conn, 1, amqp_cstring_bytes(args->args[4]), amqp_cstring_bytes(args->args[5]), 0, 0, &props, amqp_cstring_bytes(args->args[6]));
     if (rc < 0) {
         (void) amqp_channel_close(conn_info->conn, 1, AMQP_REPLY_SUCCESS);
